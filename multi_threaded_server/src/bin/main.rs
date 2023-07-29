@@ -9,7 +9,7 @@ use std::time::Duration;
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
 
-    let pool = ThreadPool::new(4);
+    let pool = ThreadPool::new(4).unwrap();
 
     for stream in listener.incoming() {
         let stream = stream.unwrap();
@@ -29,16 +29,16 @@ fn handle_connection(mut stream: TcpStream) {
 
     let (status_line, filename) = if buffer.starts_with(get) {
         let status_line = "HTTP/1.1 200 ok";
-        let filename = "index.html";
+        let filename = "static/index.html";
         (status_line, filename)
     } else if buffer.starts_with(sleep) {
         thread::sleep(Duration::from_secs(5));
         let status_line = "HTTP/1.1 200 ok";
-        let filename = "index.html";
+        let filename = "static/index.html";
         (status_line, filename)
     } else {
         let status_line = "HTTP/1.1 404 NOT FOUND";
-        let filename = "404.html";
+        let filename = "static/404.html";
         (status_line, filename)
     };
 
